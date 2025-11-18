@@ -1,6 +1,8 @@
-CREATE DATABASE IF NOT EXISTS aopdb;
+-- DATABASE CREATION --
+CREATE DATABASE aopdb;
 USE aopdb;
 
+-- TABLES --
 -- PRODUCT TYPE --
 CREATE TABLE product_type (
     product_type_cd VARCHAR(10) PRIMARY KEY,
@@ -124,47 +126,59 @@ CREATE TABLE bank_transaction (
 );
 
 -- INSERTS --
+-- PRODUCT TYPE --
 INSERT INTO product_type VALUES
 ('HDW', 'Arduino'),
 ('STW', 'Computer Vision'),
 ('MDW', 'Database');
 
+-- PRODUCT --
 INSERT INTO product VALUES
 ('HDW1', 'Microchip', 'HDW', '2021-02-01', NULL),
 ('STW1', 'Artificial Intelligence', 'STW', '2024-01-04', NULL);
 
+-- CUSTOMER --
 INSERT INTO customer VALUES
-(1, '123456789', 'I', 'Maple Street', 'Framingham', 'MA', '01000-000'),
+(1, '123456789', 'I', 'Maple Street', 'Worcester', 'MA', '01000-000'),
 (2, '987654321', 'B', 'Woodrow Wilson Street', 'Framingham', 'MA', '20000-000'),
 (3, '555666777', 'B', 'Fallbrook Street', 'Leominster', 'MA', '80000-000'),
 (4, '888111222', 'I', 'Sunset Road', 'Boston', 'MA', '55555-000');
 
+-- INDIVIDUAL --
 INSERT INTO individual VALUES
 (1, 'Juno', 'Smith', '1990-05-10'),
 (4, 'Alex', 'Barnes', '1985-09-21');
 
+-- BUSINESS --
 INSERT INTO business VALUES
+(2, 'BioTech', 'USA22', '2020-01-10'),
 (3, 'CyberSpace', 'USA40', '2024-08-04');
 
+-- OFFICER --
 INSERT INTO officer VALUES
 (1, 3, 'Bruno', 'Mercer', '2018-03-12', NULL);
 
+-- BRANCH --
 INSERT INTO branch VALUES
 (10, 'Downtown', 'Beach Avenue', 'Cape Cod', 'MA', '01310-000'),
-(11, 'Uptown', 'Sunday Hill Avenue', 'Framingham', 'MA', '20040-000');
+(11, 'Uptown', 'Sunday Hill Avenue', 'Salem', 'MA', '20040-000');
 
+-- DEPARTMENT --
 INSERT INTO department VALUES
 (100, 'Sales'),
 (200, 'Operations');
 
+-- EMPLOYEE --
 INSERT INTO employee VALUES
 (1000, 'Garfield', 'Ruthford', '2010-04-01', NULL, NULL, 100, 'Programmer', 10),
 (1001, 'Amelia', 'Forrester', '2015-08-15', NULL, 1000, 200, 'Engineer', 11);
 
+-- ACCOUNT --
 INSERT INTO account VALUES
 (5001, 'HDW1', 1, '2021-01-10', NULL, '2024-01-10', 'ACTIVE', 10, 1000, 3500.00, 0.00),
 (5002, 'STW1', 2, '2021-06-20', NULL, '2024-01-05', 'ACTIVE', 11, 1001, 1500.00, 0.00);
 
+-- TRANSACTION --
 INSERT INTO bank_transaction VALUES
 (9001, '2024-05-01 10:00:00', 5001, 'DBT', 200.00, 1001, 11, '2024-05-01 10:00:00');
 
@@ -178,12 +192,10 @@ WHERE open_emp_id IS NOT NULL;
 SELECT account_id, cust_id, avail_balance
 FROM account
 WHERE status = 'ACTIVE'
-AND avail_balance > 2500;
-
+  AND avail_balance > 2500;
 
 -- 3 --
-SELECT dept_id, MIN(start_date) AS
-oldest_start_date
+SELECT dept_id, MIN(start_date) AS oldest_start_date
 FROM employee
 GROUP BY dept_id;
 
@@ -192,29 +204,24 @@ SELECT emp_id, fname, lname
 FROM employee
 ORDER BY fname ASC, lname ASC;
 
-
 -- 5 --
-SELECT fname, lname
-FROM individual
+SELECT fname, lname FROM individual
 UNION
-SELECT fname, lname
-FROM employee;
-
+SELECT fname, lname FROM employee;
 
 -- 6 --
 SELECT emp_id
 FROM employee
 WHERE emp_id IN (
-  SELECT superior_emp_id
-  FROM employee
-  WHERE superior_emp_id IS NOT NULL
-  );
-
+    SELECT superior_emp_id
+    FROM employee
+    WHERE superior_emp_id IS NOT NULL
+);
 
 -- 7 --
 SELECT DISTINCT city
 FROM customer
 WHERE city NOT IN (
-  SELECT city
-  FROM branch
-  );
+    SELECT city
+    FROM branch
+);
